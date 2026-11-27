@@ -186,7 +186,7 @@ async function startServer() {
 
           // Trigger the opening "Hello" greeting right as the call connects
           session.sendRealtimeInput({
-            text: `The 1-minute video call with ${parsed.characterName ?? 'you'} just connected! Answer right away by saying hello in character in one short playful sentence.`,
+            text: `The 2-minute video call with ${parsed.characterName ?? 'you'} just connected! Answer right away by saying hello in character in one short playful sentence.`,
           });
         } catch (err) {
           const message =
@@ -235,6 +235,7 @@ startServer().catch((err) => {
   console.error('Failed to start server:', err);
   process.exit(1);
 });
+
 
 
 

@@ -189,7 +189,7 @@ export function ActiveCallScreen({
         if (next === FAREWELL_TRIGGER_SECOND && !farewellSentRef.current) {
           farewellSentRef.current = true;
           liveClientRef.current?.sendTextMessage(
-            'The 1-minute call is ending in a few seconds. Say "Bye bye!" in character now!'
+            'The 2-minute call is ending in a few seconds. Say "Bye bye!" in character now!'
           );
         }
 
@@ -361,7 +361,7 @@ export function ActiveCallScreen({
             <p className="mt-2 text-sm text-slate-300">
               {phase === 'RINGING_INCOMING'
                 ? `${character.name} wants to talk on live video...`
-                : 'Connecting 1-minute AI voice call...'}
+                : 'Connecting 2-minute AI voice call...'}
             </p>
           </div>
         )}
@@ -641,3 +641,4 @@ export function ActiveCallScreen({
     </div>
   );
 }
+
