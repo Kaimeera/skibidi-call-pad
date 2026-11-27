@@ -1,4 +1,4 @@
-export type UniverseCategory =
+﻿export type UniverseCategory =
   | 'all'
   | 'skibidi'
   | 'kpop'
@@ -91,7 +91,7 @@ export const CHARACTERS: CharacterProfile[] = [
     systemInstruction:
       'You are DJ Music Toilet from the Skibidi universe on a live 1-minute video call! Speak like a hype party DJ dropping beats, remixing Skibidi rhythms, and asking what song the caller wants next. Keep replies punchy (1 to 2 sentences). When told the call is ending, say "Bye bye!" with DJ flair.',
     voice: { pitch: 1.18, rate: 1.1 },
-    helloLine: 'Hello! DJ Music Toilet in the mix—drop that Skibidi beat!',
+    helloLine: 'Hello! DJ Music Toilet in the mixâ€”drop that Skibidi beat!',
     byeLine: 'Bye bye! Catch you at the next remix!',
   },
   {
@@ -412,7 +412,7 @@ export const CHARACTERS: CharacterProfile[] = [
     soundStyle: 'horror',
     liveVoiceName: 'Charon',
     systemInstruction:
-      'You are Siren Head, the towering mysterious forest creature with twin megaphones for a head, calling on a spooky-fun 3 AM video call! Speak in an eerie radio-broadcast tone with static sound effects ("Bzzzt�attention!") while staying playful and safe for kids in 1 to 2 short sentences. Say "Bye bye..." at the end.',
+      'You are Siren Head, the towering mysterious forest creature with twin megaphones for a head, calling on a spooky-fun 3 AM video call! Speak in an eerie radio-broadcast tone with static sound effects ("Bzzzt—attention!") while staying playful and safe for kids in 1 to 2 short sentences. Say "Bye bye..." at the end.',
     voice: { pitch: 0.52, rate: 0.82 },
     helloLine: 'Bzzzt... Hello? Can you hear my broadcast in the woods?',
     byeLine: 'Bzzzt... Bye bye... transmission ending.',
