@@ -31,7 +31,11 @@ interface TextPayload {
   text: string;
 }
 
-type ClientMessage = StartPayload | AudioPayload | TextPayload;
+interface AudioEndPayload {
+  type: 'audioEnd';
+}
+
+type ClientMessage = StartPayload | AudioPayload | TextPayload | AudioEndPayload;
 
 const VALID_VOICES = new Set<VoiceName>([
   'Puck',
@@ -127,6 +131,15 @@ async function startServer() {
                   prebuiltVoiceConfig: { voiceName },
                 },
               },
+              realtimeInputConfig: {
+                automaticActivityDetection: {
+                  disabled: false,
+                  startOfSpeechSensitivity: 'START_SENSITIVITY_LOW',
+                  endOfSpeechSensitivity: 'END_SENSITIVITY_HIGH',
+                  prefixPaddingMs: 250,
+                  silenceDurationMs: 450,
+                },
+              },
               inputAudioTranscription: {},
               outputAudioTranscription: {},
               systemInstruction:
@@ -215,6 +228,14 @@ async function startServer() {
         try {
           liveSession.sendRealtimeInput({
             text: parsed.text,
+          });
+        } catch {
+          // Ignore transient send errors
+        }
+      } else if (parsed.type === 'audioEnd') {
+        try {
+          liveSession.sendRealtimeInput({
+            audioStreamEnd: true,
           });
         } catch {
           // Ignore transient send errors

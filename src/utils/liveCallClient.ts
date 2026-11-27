@@ -77,6 +77,8 @@ export class LiveCallClient {
   private closed = false;
   private isReady = false;
   private turnActive = false;
+  private isUserTalking = false;
+  private lastVoiceTime = 0;
 
   private callbacks: LiveCallCallbacks;
 
@@ -207,24 +209,58 @@ export class LiveCallClient {
       }
 
       const source = inputCtx.createMediaStreamSource(stream);
-      const processor = inputCtx.createScriptProcessor(4096, 1, 1);
+      const processor = inputCtx.createScriptProcessor(2048, 1, 1);
       this.sourceNode = source;
       this.processor = processor;
+
+      const VOICE_RMS_THRESHOLD = 0.015;
+      const SILENCE_FLUSH_MS = 500;
 
       processor.onaudioprocess = (e) => {
         if (
           this.closed ||
-          this.micMuted ||
           !this.isReady ||
           !this.ws ||
           this.ws.readyState !== WebSocket.OPEN
         ) {
           return;
         }
+
+        // Pause mic capture while muted or while the character is speaking to block speaker echo
+        if (this.micMuted || this.activeSources.size > 0) {
+          if (this.isUserTalking) {
+            this.isUserTalking = false;
+            this.ws.send(JSON.stringify({ type: 'audioEnd' }));
+          }
+          return;
+        }
+
         const raw = e.inputBuffer.getChannelData(0);
-        const pcm16 = resampleTo16k(raw, inputCtx.sampleRate);
-        const b64 = int16ToBase64(pcm16);
-        this.ws.send(JSON.stringify({ type: 'audio', audio: b64 }));
+        let sumSquares = 0;
+        for (let i = 0; i < raw.length; i += 1) {
+          sumSquares += raw[i] * raw[i];
+        }
+        const rms = Math.sqrt(sumSquares / raw.length);
+        const now = performance.now();
+
+        if (rms >= VOICE_RMS_THRESHOLD) {
+          this.isUserTalking = true;
+          this.lastVoiceTime = now;
+          const pcm16 = resampleTo16k(raw, inputCtx.sampleRate);
+          const b64 = int16ToBase64(pcm16);
+          this.ws.send(JSON.stringify({ type: 'audio', audio: b64 }));
+        } else if (this.isUserTalking) {
+          if (now - this.lastVoiceTime < SILENCE_FLUSH_MS) {
+            // Send brief trailing silence for natural word endings
+            const pcm16 = resampleTo16k(raw, inputCtx.sampleRate);
+            const b64 = int16ToBase64(pcm16);
+            this.ws.send(JSON.stringify({ type: 'audio', audio: b64 }));
+          } else {
+            // Flush end-of-speech immediately so Gemini replies without lag
+            this.isUserTalking = false;
+            this.ws.send(JSON.stringify({ type: 'audioEnd' }));
+          }
+        }
       };
 
       source.connect(processor);
@@ -303,6 +339,10 @@ export class LiveCallClient {
 
   public setMicMuted(muted: boolean): void {
     this.micMuted = muted;
+    if (muted && this.isUserTalking && this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.isUserTalking = false;
+      this.ws.send(JSON.stringify({ type: 'audioEnd' }));
+    }
   }
 
   public setSpeakerMuted(muted: boolean): void {
