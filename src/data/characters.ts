@@ -1,4 +1,12 @@
-﻿export type UniverseCategory =
+﻿const images = import.meta.glob('../assets/images/*.{jpg,png,webp}', {
+  eager: true,
+  import: 'default',
+}) as Record<string, string>;
+
+const getCharImg = (filename: string) => images[`../assets/images/${filename}`];
+
+
+export type UniverseCategory =
   | 'all'
   | 'skibidi'
   | 'kpop'
@@ -406,7 +414,7 @@ export const CHARACTERS: CharacterProfile[] = [
     universe: 'horror',
     universeLabel: 'Horror',
     tagline: 'Midnight Forest Broadcast',
-    image: '/src/assets/images/char_siren_head.jpg',
+    image: getCharImg('char_siren_head.jpg'),
     accentHex: '#EF4444',
     filterMode: 'horror',
     soundStyle: 'horror',
@@ -423,7 +431,7 @@ export const CHARACTERS: CharacterProfile[] = [
     universe: 'memes',
     universeLabel: 'Meme Icons',
     tagline: 'Is Calling You...',
-    image: '/src/assets/images/char_john_pork.jpg',
+    image: getCharImg('char_john_pork.jpg'),
     accentHex: '#EC4899',
     filterMode: 'normal',
     soundStyle: 'meme',
@@ -440,7 +448,7 @@ export const CHARACTERS: CharacterProfile[] = [
     universe: 'horror',
     universeLabel: 'Horror',
     tagline: 'Uncanny Nextbot Feed',
-    image: '/src/assets/images/char_selene_delgado.jpg',
+    image: getCharImg('char_selene_delegado.jpg'),
     accentHex: '#94A3B8',
     filterMode: 'horror',
     soundStyle: 'horror',
