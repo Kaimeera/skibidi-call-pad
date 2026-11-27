@@ -1,4 +1,4 @@
-import 'dotenv/config';
+﻿import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import path from 'path';
@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = Number(process.env.PORT) || 3000;
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production' || Boolean(process.env.RENDER);
 
 type VoiceName = 'Puck' | 'Charon' | 'Kore' | 'Fenrir' | 'Zephyr';
 
@@ -67,7 +67,7 @@ async function startServer() {
   const server = http.createServer(app);
   const wss = new WebSocketServer({ server, path: '/api/live-call' });
 
-  wss.on('connection', (clientWs: WebSocket) => {
+  wss.on('connection', (clientWs: WebSocket) => { console.log('[live-call] Client WebSocket connected');
     let liveSession: Awaited<ReturnType<GoogleGenAI['live']['connect']>> | null =
       null;
     let isClosing = false;
@@ -126,7 +126,7 @@ async function startServer() {
 
         try {
           const session = await ai.live.connect({
-            model: 'gemini-3.8-live',
+            model: 'gemini-2.5-flash-native-audio-preview-12-2025',
             config: {
               responseModalities: [Modality.AUDIO],
               speechConfig: {
@@ -242,3 +242,4 @@ startServer().catch((err) => {
   console.error('Failed to start server:', err);
   process.exit(1);
 });
+
