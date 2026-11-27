@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -37,8 +37,13 @@ export default function App() {
   const [lastCall, setLastCall] = useState<RecentCallRecord | null>(null);
 
   const visibleCharacters = useMemo(() => {
-    if (activeCategory === 'all') return CHARACTERS;
-    return CHARACTERS.filter((char) => char.universe === activeCategory);
+    if (activeCategory !== 'all') {
+      return CHARACTERS.filter((char) => char.universe === activeCategory);
+    }
+    const order = ['skibidi', 'kpop', 'fairytale', 'horror', 'memes'];
+    return [...CHARACTERS].sort(
+      (a, b) => order.indexOf(a.universe) - order.indexOf(b.universe)
+    );
   }, [activeCategory]);
 
   const handleStartCall = (character: CharacterProfile) => {
@@ -72,7 +77,7 @@ export default function App() {
               Tap any character for a live AI video call
             </h1>
             <p className="mt-1.5 text-sm text-slate-400 sm:text-base">
-              Talk out loud or type for two full minutesâ€”they answer, chat back in real time, and say bye-bye at the end.
+              Talk out loud or type for two full minutes—they answer, chat back in real time, and say bye-bye at the end.
             </p>
           </div>
 
@@ -81,7 +86,7 @@ export default function App() {
             {lastCall && (
               <>
                 <span aria-hidden="true" className="mx-2">
-                  Â·
+                  ·
                 </span>
                 <span>
                   Last call: {lastCall.characterName}{' '}
