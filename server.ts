@@ -115,10 +115,7 @@ async function startServer() {
             ? parsed.voiceName
             : 'Puck';
 
-        const ai = new GoogleGenAI({
-          apiKey,
-          
-        });
+        const ai = new GoogleGenAI({ apiKey, apiVersion: 'v1alpha' });
 
         try {
           const session = await ai.live.connect({
@@ -238,5 +235,6 @@ startServer().catch((err) => {
   console.error('Failed to start server:', err);
   process.exit(1);
 });
+
 
 
