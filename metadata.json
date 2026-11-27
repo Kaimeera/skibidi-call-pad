@@ -1,0 +1,6 @@
+{
+  "name": "Skibidi Call Pad",
+  "description": "An Android tablet live AI video-call game featuring Skibidi Toilet, Camera Woman, DJ Music Toilet, Hydro Toilet, Rumi, Shrek, Fiona, Gingerbread Man, Talking Tom Horror, 6 7 Guy, Ballerina Cappuccina, Ochunga, and Obunga.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
