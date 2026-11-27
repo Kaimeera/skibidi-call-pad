@@ -117,11 +117,7 @@ async function startServer() {
 
         const ai = new GoogleGenAI({
           apiKey,
-          httpOptions: {
-            headers: {
-              'User-Agent': 'aistudio-build',
-            },
-          },
+          
         });
 
         try {
@@ -173,9 +169,9 @@ async function startServer() {
               onerror: (err: unknown) => {
                 const msg =
                   err instanceof Error ? err.message : 'Live API connection error';
-                sendToClient({ type: 'error', message: msg });
+                console.error('[live-call] Gemini onerror:', err); sendToClient({ type: 'error', message: msg });
               },
-              onclose: () => {
+              onclose: (e: unknown) => { console.log('[live-call] Gemini onclose:', e);
                 if (!isClosing) {
                   sendToClient({ type: 'closed' });
                 }
@@ -200,7 +196,7 @@ async function startServer() {
             err instanceof Error
               ? err.message
               : 'Failed to connect to Gemini Live API.';
-          sendToClient({ type: 'error', message });
+          console.error('[live-call] Gemini catch:', err); sendToClient({ type: 'error', message });
         }
         return;
       }
@@ -242,4 +238,5 @@ startServer().catch((err) => {
   console.error('Failed to start server:', err);
   process.exit(1);
 });
+
 
