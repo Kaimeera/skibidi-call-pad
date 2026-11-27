@@ -166,9 +166,9 @@ async function startServer() {
               onerror: (err: unknown) => {
                 const msg =
                   err instanceof Error ? err.message : 'Live API connection error';
-                console.error('[live-call] Gemini onerror:', err); sendToClient({ type: 'error', message: msg });
+                console.error('[live-call] Gemini onerror:', (err instanceof Error ? err.message : 'Live API error').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')); sendToClient({ type: 'error', message: msg });
               },
-              onclose: (e: unknown) => { console.log('[live-call] Gemini onclose:', e);
+              onclose: (e: unknown) => { console.log('[live-call] Gemini session closed');
                 if (!isClosing) {
                   sendToClient({ type: 'closed' });
                 }
@@ -193,7 +193,7 @@ async function startServer() {
             err instanceof Error
               ? err.message
               : 'Failed to connect to Gemini Live API.';
-          console.error('[live-call] Gemini catch:', err); sendToClient({ type: 'error', message });
+          console.error('[live-call] Gemini catch:', (err instanceof Error ? err.message : 'Connect error').replace(/key=[^&\s]+/gi, 'key=[REDACTED]')); sendToClient({ type: 'error', message });
         }
         return;
       }
@@ -235,6 +235,7 @@ startServer().catch((err) => {
   console.error('Failed to start server:', err);
   process.exit(1);
 });
+
 
 
 
