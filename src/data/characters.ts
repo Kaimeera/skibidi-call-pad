@@ -448,7 +448,7 @@ export const CHARACTERS: CharacterProfile[] = [
     universe: 'horror',
     universeLabel: 'Horror',
     tagline: 'Uncanny Nextbot Feed',
-    image: getCharImg('char_selene_delegado.jpg'),
+    image: getCharImg('char_selene_delgado.jpg'),
     accentHex: '#94A3B8',
     filterMode: 'horror',
     soundStyle: 'horror',
