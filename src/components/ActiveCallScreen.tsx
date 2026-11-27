@@ -25,8 +25,8 @@ export type CallPhase =
   | 'CONNECTED'
   | 'ENDED';
 
-const CALL_DURATION_SECONDS = 60;
-const FAREWELL_TRIGGER_SECOND = 54;
+const CALL_DURATION_SECONDS = 120;
+const FAREWELL_TRIGGER_SECOND = 112;
 
 interface ActiveCallScreenProps {
   character: CharacterProfile;
